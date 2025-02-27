@@ -31,6 +31,8 @@ const Comment = mongoose.model("Comment", CommentSchema);
 app.post("/comments", async (req, res) => {
     try {
         const { username, comment } = req.body;
+        if (!username || !comment) return res.status(400).json({ error: "Username and comment are required" });
+
         const newComment = new Comment({ username, comment });
         await newComment.save();
         res.status(201).json(newComment);
@@ -39,7 +41,7 @@ app.post("/comments", async (req, res) => {
     }
 });
 
-// 🔵 Read (GET) all comments
+// Get all comments (No filtering by postId)
 app.get("/comments", async (req, res) => {
     try {
         const comments = await Comment.find();
@@ -49,7 +51,7 @@ app.get("/comments", async (req, res) => {
     }
 });
 
-// 🟡 Update (PUT) a comment by ID
+// Update (PUT) a comment by ID
 app.put("/comments/:id", async (req, res) => {
     try {
         const { username, comment } = req.body;
